@@ -1,0 +1,257 @@
+<!--<p-table [value]="clients" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>clientId</th>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Adresse</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-client>
+        <tr>
+            <td>{{client.idClient}}</td>
+            <td>{{client.nom}}</td>
+            <td>{{client.prenom}}</td>
+            <td>{{client.adresse}}</td>
+           
+        </tr>
+    </ng-template>
+</p-table>-->
+
+<div class="mat-elevation-z8">
+    <mat-card>
+        <button style="color: rgb(0, 94, 255)" (click)="add()">
+            <mat-icon>note_add</mat-icon>
+        </button>
+    </mat-card>
+    <div class="text-right">
+        <button class="btn btn-sm btn-primary" (click)="showAddClientDef()"><i class="fas fa-plus-circle"></i> New
+            Machine</button>
+        &nbsp;&nbsp;
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="idClient">
+            <th mat-header-cell *matHeaderCellDef> idClient </th>
+            <td mat-cell *matCellDef="let element"> {{element.idClient}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.nom}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="prenom">
+            <th mat-header-cell *matHeaderCellDef> prenom </th>
+            <td mat-cell *matCellDef="let element"> {{element.prenom}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="adresse">
+            <th mat-header-cell *matHeaderCellDef>Address <Address></Address>
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.adresse}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Actions">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element">
+
+                <button style="color: red" (click)="deleteClient(element.idClient)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                &nbsp;
+                <button style="color: rgb(43, 0, 255)">
+                    <mat-icon> border_color</mat-icon>
+                </button>
+                &nbsp;
+                <button style="color: green;">
+                    <mat-icon>visibility</mat-icon>
+                </button>
+
+            </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+
+    </table>
+
+    <mat-paginator [length]="dataSource.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+        aria-label="Select page of periodic elements">
+    </mat-paginator>
+</div>
+
+<!--=========Client Definition DIALOG==========-->
+<p-dialog *ngIf="displayClientDefiinitionDialog" [(visible)]="displayClientDefiinitionDialog" [resizable]="false"
+    [style]="{width: '85vw'}" [modal]="true" [closable]="true" [draggable]="false">
+    <p-header>
+        <h3 *ngIf="isEditClientMode">Edit Machine Definition</h3>
+        <h3 *ngIf="!isEditClientMode">Add Machine Definition</h3>
+    </p-header>
+    <p></p>
+    <div class class="container" style="margin-top: -10px;">
+        <form [formGroup]="clientForm">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Id Client</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="id Client" aria-label="idClient"
+                                formControlName="idClient"
+                                [ngClass]="{ 'is-invalid': clientForm.controls['idClient'].errors && clientForm.controls['idClient'].touched, 'is-valid': clientForm.controls['idClient'].valid }">
+                            <div class="valid-feedback">
+                                Id client looks good!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Nom</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="nom" aria-label="nom"
+                                formControlName="nom"
+                                [ngClass]="{ 'is-invalid': clientForm.controls['nom'].errors && clientForm.controls['nom'].touched, 'is-valid': clientForm.controls['nom'].valid }">
+                            <div class="valid-feedback">
+                                nom looks good!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="col-4">
+                    <div class="form-group">
+                      <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text">nom</span>
+                          </div>
+                          <p-dropdown (onChange)="onGetMachineCriteriaByType()" placeholder="Select Type" [showClear]="true" [options]="machineTypeOptions" formControlName="type" [ngClass]="{ 'is-invalid': clientForm.controls.type.errors && clientForm.controls.type.touched, 'is-valid': clientForm.controls['type'].valid }"></p-dropdown>           
+                          <div class="validFeedback" *ngIf="clientForm.controls['type'].valid">
+                              Machine type looks good!
+                            </div>
+                      </div>
+                   </div>
+                  </div>-->
+
+
+                <!--<div class="col-3">
+                    <div class="form-group">
+                      <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text">Status</span>
+                          </div>
+                          <p-dropdown placeholder="Select Status" [showClear]="true" [options]="machineStatusOptions" formControlName="status" [ngClass]="{ 'is-invalid': clientForm.controls.status.errors && clientForm.controls.status.touched, 'is-valid': clientForm.controls['status'].valid }"></p-dropdown>           
+                          <div class="validFeedback" *ngIf="clientForm.controls['status'].valid">
+                              Machine status looks good!
+                            </div>
+                      </div>
+                   </div>
+                  </div>
+                  -->
+
+
+            </div>
+        </form>
+
+        <br><br>
+
+    </div>
+
+
+    <!--<p-footer>
+            <button *ngIf="isEditClientMode == false" [disabled]="clientForm.invalid" class="p-button-success" pButton pRipple type="button" label="Save" icon="pi pi-check" iconPos="right" (click)="add()"></button>
+            <button *ngIf="isEditClientMode == true" [disabled]="clientForm.invalid" class="p-button-success" pButton pRipple type="button" label="Save" icon="pi pi-check" iconPos="right" (click)="add()"></button>    
+            &nbsp;
+            <button class="p-button-secondary" pButton pRipple type="button" label="Close" icon="pi pi-times" iconPos="right" (click)="displayClientDefiinitionDialog=false"></button>
+        </p-footer>
+    -->
+
+</p-dialog>
+
+
+
+
+
+<h1 mat-dialog-title>Add client</h1>
+<div mat-dialog-content>
+  Add client
+  <div class class="container" style="margin-top: -10px;">
+    <form [formGroup]="clientForm">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Id Client</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="id Client" aria-label="idClient"
+                            formControlName="idClient"
+                            [ngClass]="{ 'is-invalid': clientForm.controls['idClient'].errors && clientForm.controls['idClient'].touched, 'is-valid': clientForm.controls['idClient'].valid }">
+                        <div class="valid-feedback">
+                            Id client looks good!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Nom</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="nom" aria-label="nom"
+                            formControlName="nom"
+                            [ngClass]="{ 'is-invalid': clientForm.controls['nom'].errors && clientForm.controls['nom'].touched, 'is-valid': clientForm.controls['nom'].valid }">
+                        <div class="valid-feedback">
+                            nom looks good!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-4">
+                <div class="form-group">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">nom</span>
+                      </div>
+                      <p-dropdown (onChange)="onGetMachineCriteriaByType()" placeholder="Select Type" [showClear]="true" [options]="machineTypeOptions" formControlName="type" [ngClass]="{ 'is-invalid': clientForm.controls.type.errors && clientForm.controls.type.touched, 'is-valid': clientForm.controls['type'].valid }"></p-dropdown>           
+                      <div class="validFeedback" *ngIf="clientForm.controls['type'].valid">
+                          Machine type looks good!
+                        </div>
+                  </div>
+               </div>
+              </div>-->
+
+
+            <!--<div class="col-3">
+                <div class="form-group">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">Status</span>
+                      </div>
+                      <p-dropdown placeholder="Select Status" [showClear]="true" [options]="machineStatusOptions" formControlName="status" [ngClass]="{ 'is-invalid': clientForm.controls.status.errors && clientForm.controls.status.touched, 'is-valid': clientForm.controls['status'].valid }"></p-dropdown>           
+                      <div class="validFeedback" *ngIf="clientForm.controls['status'].valid">
+                          Machine status looks good!
+                        </div>
+                  </div>
+               </div>
+              </div>
+              -->
+
+
+        </div>
+    </form>
+
+    <br><br>
+
+</div>
+</div>
